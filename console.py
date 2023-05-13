@@ -7,6 +7,7 @@ class HBNBCommand(cmd.Cmd):
     define a command interpreter for the program
     the entry point of the command interpreter
     """
+
     prompt = "(hbnb) "
 
     def do_quit(self, arg):
@@ -20,11 +21,13 @@ class HBNBCommand(cmd.Cmd):
         Exit the program
         """
         return True
+
     def emptyline(self):
         """
         Do nothing when an empty line is entered
         """
         pass
+
     def help_quit(self):
         """
         Display help message for the quit command.
