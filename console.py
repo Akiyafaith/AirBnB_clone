@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-
+"""import the command interpreter module"""
 import cmd
+
 
 class HBNBCommand(cmd.Cmd):
     """

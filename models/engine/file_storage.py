@@ -3,7 +3,7 @@
 FileStorage module
 """
 
-
+from models.base_model import BaseModel
 import models
 import json
 import os

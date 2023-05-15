@@ -1,7 +1,10 @@
 #!/usr/bin/python3
-import uuid
+"""import modules """
 from datetime import datetime
-from models import storage
+import uuid
+#from models import storage
+#from models.__init__ import storage
+
 
 class BaseModel:
     """define a class Basemodel with attributes and methods for other classes
@@ -30,7 +33,7 @@ class BaseModel:
             storage.new(self)
 
     def __str__(self):
-        """return a string representation"""
+        """return a dting representation"""
         return "[{}] ({}) {}".format(
             self.__class__.__name__, self.id, self.__dict__)
 
@@ -42,7 +45,7 @@ class BaseModel:
     def to_dict(self):
         """define a method to generate a dictionary
         representation of an instance"""
-        obj_dict = self.__dict__.copy()
+        obj_dict = dict(self.__dict__.copy())
         obj_dict['__class__'] = self.__class__.__name__
         obj_dict['created_at'] = self.created_at.isoformat()
         obj_dict['updated_at'] = self.updated_at.isoformat()
