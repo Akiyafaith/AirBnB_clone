@@ -3,8 +3,7 @@
 FileStorage module
 """
 
-from models.base_model import BaseModel
-import models
+
 import json
 import os
 
@@ -40,6 +39,8 @@ class FileStorage:
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
+        from models.base_model import BaseModel
+
         if not os.path.isfile(self.__file_path):
             return
         with open(self.__file_path, "r") as f:
