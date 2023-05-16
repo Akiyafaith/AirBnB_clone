@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 """import modules """
+
 import uuid
 from datetime import datetime
 #from models import storage
+import  models
 
 
-class BaseModel():
+class BaseModel:
     """define a class Basemodel with attributes and methods for other classes
     """
     def __init__(self, *args, **kwargs):
@@ -19,10 +21,14 @@ class BaseModel():
         """
 
         if kwargs:
+            if 'created_at' in kwargs:
+                kwargs['created_at'] = datetime.strptime(
+                    kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
+            if 'updated_at' in kwargs:
+                kwargs['updated_at'] = datetime.strptime(
+                    kwargs['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
             for key, value in kwargs.items():
                 if key != '__class__':
-                    if key in ['created_at', 'updated_at']:
-                        value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
                     setattr(self, key, value)
 
         else:
@@ -33,13 +39,12 @@ class BaseModel():
 
     def __str__(self):
         """return a dting representation"""
-        return "[{}] ({}) {}".format(
-            self.__class__.__name__, self.id, self.__dict__)
+        return (f"[{__class__.__name__}] ({self.id}) {self.__dict__}")
 
     def save(self):
         """define a public instance method"""
         self.updated_at = datetime.now()
-        #storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """define a method to generate a dictionary

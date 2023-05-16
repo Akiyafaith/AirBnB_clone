@@ -6,48 +6,46 @@ FileStorage module
 
 import json
 import os
-
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 class FileStorage:
     """
-    Serializes instances to a JSON file
-    and deserializes JSON file to instances
+    Instantiation of attributes
     """
-    def __init__(self):
-        """
-        Instantiation of attributes
-        """
-        self.__file_path = "file.json"
-        self.__objects = {}
+    __file_path = "file.json"
+    __objects = {}
 
     def all(self):
         """Returns the dictionary __objects"""
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """Sets in __objects the obj with key <obj class name>.id"""
         key = "{}.{}".format(type(obj).__name__, obj.id)
-        self.__objects[key] = obj
+        FileStorage.__objects[key] = obj
 
     def save(self):
         """Serializes __objects to the JSON file"""
         obj_dict = {}
-        for key, value in self.__objects.items():
+        for key, value in FileStorage.__objects.items():
             obj_dict[key] = value.to_dict().copy()
-        with open(self.__file_path, "w") as f:
+        with open(FileStorage.__file_path, "w", encoding='utf-8') as f:
             json.dump(obj_dict, f)
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
-        from models.base_model import BaseModel
-
-        if not os.path.isfile(self.__file_path):
+        try:
+            with open(FileStorage.__file_path) as f:
+                objdict = json.load(f)
+                for o in objdict.values():
+                    cls_name = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(cls_name)(**o))
+        except FileNotFoundError:
             return
-        with open(self.__file_path, "r") as f:
-            obj_dict = json.load(f)
-            for key, obj_data in obj_dict.items():
-                class_name, obj_id = key.split(".")
-                module = __import__(class_name)
-                class_ = getattr(module, class_name)
-                obj = class_(**obj_data)
-                self.__objects[key] = obj
